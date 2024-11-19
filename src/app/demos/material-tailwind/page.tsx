@@ -11,20 +11,43 @@ export default function MaterialTailwindDemo() {
 	const [color, setColor] = useState<ButtonColor>("blue");
 	const [size, setSize] = useState<ButtonSize>("sm");
 
+	// 生成当前配置的代码示例
+	const generateCode = () => {
+		return `import { Button } from "@material-tailwind/react";
+
+export default function ButtonDemo() {
+	return (
+		<Button
+			variant="${variant}"
+			color="${color}"
+			size="${size}"
+		>
+			示例按钮
+		</Button>
+	);
+}`;
+	};
+
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<h1 className="text-3xl font-bold mb-8">Material Tailwind Demo</h1>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				{/* 预览区域 */}
-				<div className="p-6 border rounded-lg bg-card-background text-card-foreground flex items-center justify-center min-h-[200px]">
-					<Button
-						variant={variant}
-						color={color}
-						size={size}
-					>
-						示例按钮
-					</Button>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+				<div className="space-y-6">
+					{/* 预览区域 */}
+					<div className="p-6 border rounded-lg bg-card-background text-card-foreground flex items-center justify-center min-h-[200px]">
+						<Button variant={variant} color={color} size={size}>
+							示例按钮
+						</Button>
+					</div>
+
+					{/* 代码预览 */}
+					<div className="p-6 border rounded-lg bg-card-background text-card-foreground">
+						<h2 className="text-xl font-semibold mb-4">代码示例</h2>
+						<pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+							<code>{generateCode()}</code>
+						</pre>
+					</div>
 				</div>
 
 				{/* 控制面板 */}
