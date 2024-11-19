@@ -13,6 +13,10 @@ module.exports = withMT({
 			colors: {
 				background: "var(--background)",
 				foreground: "var(--foreground)",
+				card: {
+					background: "var(--card-background)",
+					foreground: "var(--card-foreground)",
+				},
 			},
 		},
 	},
