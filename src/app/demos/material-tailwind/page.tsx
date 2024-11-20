@@ -3,30 +3,42 @@ import CodeBlock from "@/app/components/CodeBlock";
 import { Button } from "@material-tailwind/react";
 import { useState, useMemo, useEffect } from "react";
 
-type ButtonVariant = "filled" | "gradient" | "outlined" | "text";
-type ButtonColor = "blue" | "red" | "green" | "amber" | "purple";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = "filled" | "gradient" | "outlined" | "text" | "";
+type ButtonColor = "blue" | "red" | "green" | "amber" | "purple" | "";
+type ButtonSize = "sm" | "md" | "lg" | "";
 
 export default function MaterialTailwindDemo() {
-	const [variant, setVariant] = useState<ButtonVariant>("filled");
-	const [color, setColor] = useState<ButtonColor>("blue");
-	const [size, setSize] = useState<ButtonSize>("sm");
+	// 配置项
+	const configVariants = {
+		key: "variant",
+		value: ["filled", "gradient", "outlined", "text"],
+	};
+	const configColors = {
+		key: "color",
+		value: ["blue", "red", "green", "amber", "purple"],
+	};
+	const configSizes = {
+		key: "size",
+		value: ["sm", "md", "lg"],
+	};
+
+	const [variant, setVariant] = useState<ButtonVariant>("");
+	const [color, setColor] = useState<ButtonColor>("");
+	const [size, setSize] = useState<ButtonSize>("");
 
 	// 使用 useMemo 缓存生成的代码
 	const code = useMemo(() => {
 		const buttonProps = [
-			`variant="${variant}"`,
-			`color="${color}"`,
-			`size="${size}"`,
-		];
+			variant ? `${configVariants.key}="${variant}"` : "",
+			color ? `${configColors.key}="${color}"` : "",
+			size ? `${configSizes.key}="${size}"` : "",
+		].filter(Boolean);
 
 		return `import { Button } from "@material-tailwind/react";
 	  
 export default function Example() {
 	return (
-		<Button
-			${buttonProps.join("\n      		")}
-		>
+		<Button${ buttonProps.length ? '\n      		' + buttonProps.join("\n      		") + '\n      	' : ''}>
 			示例按钮
 		</Button>
 	);
@@ -63,23 +75,21 @@ export default function Example() {
 								样式变体
 							</label>
 							<div className="grid grid-cols-2 gap-2">
-								{["filled", "gradient", "outlined", "text"].map(
-									(v) => (
-										<button
-											key={v}
-											onClick={() =>
-												setVariant(v as ButtonVariant)
-											}
-											className={`p-2 rounded ${
-												variant === v
-													? "bg-blue-500 text-white"
-													: "bg-card-background text-card-foreground hover:bg-opacity-80"
-											}`}
-										>
-											{v}
-										</button>
-									)
-								)}
+								{configVariants.value.map((v) => (
+									<button
+										key={v}
+										onClick={() =>
+											setVariant(v as ButtonVariant)
+										}
+										className={`p-2 rounded ${
+											variant === v
+												? "bg-blue-500 text-white"
+												: "bg-card-background text-card-foreground hover:bg-opacity-80"
+										}`}
+									>
+										{v}
+									</button>
+								))}
 							</div>
 						</div>
 
@@ -88,25 +98,21 @@ export default function Example() {
 								颜色
 							</label>
 							<div className="grid grid-cols-3 gap-2">
-								{[
-									"blue",
-									"red",
-									"green",
-									"amber",
-									"purple",
-								].map((c) => (
+								{configColors.value.map((currentColor) => (
 									<button
-										key={c}
+										key={currentColor}
 										onClick={() =>
-											setColor(c as ButtonColor)
+											setColor(
+												currentColor as ButtonColor
+											)
 										}
 										className={`p-2 rounded ${
-											color === c
+											color === currentColor
 												? "bg-blue-500 text-white"
 												: "bg-card-background text-card-foreground hover:bg-opacity-80"
 										}`}
 									>
-										{c}
+										{currentColor}
 									</button>
 								))}
 							</div>
@@ -117,17 +123,19 @@ export default function Example() {
 								尺寸
 							</label>
 							<div className="grid grid-cols-3 gap-2">
-								{["sm", "md", "lg"].map((s) => (
+								{configSizes.value.map((currentSize) => (
 									<button
-										key={s}
-										onClick={() => setSize(s as ButtonSize)}
+										key={currentSize}
+										onClick={() =>
+											setSize(currentSize as ButtonSize)
+										}
 										className={`p-2 rounded ${
-											size === s
+											size === currentSize
 												? "bg-blue-500 text-white"
 												: "bg-card-background text-card-foreground hover:bg-opacity-80"
 										}`}
 									>
-										{s}
+										{currentSize}
 									</button>
 								))}
 							</div>
