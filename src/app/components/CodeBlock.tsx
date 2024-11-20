@@ -17,8 +17,8 @@ export default function CodeBlock({
 	code,
 	language = "typescript",
 }: CodeBlockProps) {
-	// 保存上一次的代码行，用于比较变化
 	const prevLinesRef = useRef<string[]>([]);
+	const prevLengthRef = useRef<number>(0);
 
 	const highlightedCode = useMemo(() => {
 		const highlighted = Prism.highlight(
@@ -28,6 +28,7 @@ export default function CodeBlock({
 		);
 
 		const lines = highlighted.split("\n");
+		const isRemoving = lines.length < prevLengthRef.current;
 
 		// 计算每行的变化状态
 		const linesWithChangeState = lines.map((line, index) => {
@@ -36,11 +37,13 @@ export default function CodeBlock({
 				html: line || " ",
 				key: `${index}-${line.slice(0, 10)}`,
 				changed: hasChanged,
+				isRemoving,
 			};
 		});
 
-		// 更新上一次的代码行
+		// 更新引用值
 		prevLinesRef.current = lines;
+		prevLengthRef.current = lines.length;
 
 		return linesWithChangeState;
 	}, [code, language]);
@@ -49,16 +52,36 @@ export default function CodeBlock({
 		<div className="relative">
 			<pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
 				<code className={`language-${language}`}>
-					{highlightedCode.map(({ html, key, changed }) => (
-						<motion.div
-							key={key}
-							initial={changed ? { opacity: 0, y: -20 } : false}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.2 }}
-							className="block"
-							dangerouslySetInnerHTML={{ __html: html }}
-						/>
-					))}
+					{highlightedCode.map(
+						({ html, key, changed, isRemoving }) => (
+							<motion.div
+								key={key}
+								initial={
+									changed
+										? {
+												opacity: 0,
+												y: isRemoving ? 20 : -20,
+										  }
+										: false
+								}
+								animate={{
+									opacity: 1,
+									y: 0,
+								}}
+								exit={
+									isRemoving
+										? {
+												opacity: 0,
+												y: 20,
+										  }
+										: undefined
+								}
+								transition={{ duration: 0.2 }}
+								className="block"
+								dangerouslySetInnerHTML={{ __html: html }}
+							/>
+						)
+					)}
 				</code>
 			</pre>
 		</div>
