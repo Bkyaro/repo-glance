@@ -1,6 +1,7 @@
 "use client";
+import CodeBlock from "@/app/components/CodeBlock";
 import { Button } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 type ButtonVariant = "filled" | "gradient" | "outlined" | "text";
 type ButtonColor = "blue" | "red" | "green" | "amber" | "purple";
@@ -11,22 +12,26 @@ export default function MaterialTailwindDemo() {
 	const [color, setColor] = useState<ButtonColor>("blue");
 	const [size, setSize] = useState<ButtonSize>("sm");
 
-	// 生成当前配置的代码示例
-	const generateCode = () => {
-		return `import { Button } from "@material-tailwind/react";
+	// 使用 useMemo 缓存生成的代码
+	const code = useMemo(() => {
+		const buttonProps = [
+			`variant="${variant}"`,
+			`color="${color}"`,
+			`size="${size}"`,
+		];
 
-export default function ButtonDemo() {
+		return `import { Button } from "@material-tailwind/react";
+	  
+export default function Example() {
 	return (
 		<Button
-			variant="${variant}"
-			color="${color}"
-			size="${size}"
+			${buttonProps.join("\n      		")}
 		>
 			示例按钮
 		</Button>
 	);
 }`;
-	};
+	}, [variant, color, size]); // 依赖于所有配置项
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -44,9 +49,7 @@ export default function ButtonDemo() {
 					{/* 代码预览 */}
 					<div className="p-6 border rounded-lg bg-card-background text-card-foreground">
 						<h2 className="text-xl font-semibold mb-4">代码示例</h2>
-						<pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-							<code>{generateCode()}</code>
-						</pre>
+						<CodeBlock code={code} />
 					</div>
 				</div>
 
