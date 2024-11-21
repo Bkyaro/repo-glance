@@ -18,6 +18,55 @@
 	}
 }
 
+/* 让滚动条悬浮在内容上 */
+* {
+	scrollbar-gutter: stable both-edges;
+}
+
+/* 添加滚动条样式 */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	right: 0px;
+	position: absolute;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(0, 0, 0, 0.25);
+}
+
+/* 让滚动容器有一些内边距，以防止内容被滚动条遮挡 */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+	padding-right: 2px;
+}
+
+/* 暗色模式下的滚动条样式 */
+@media (prefers-color-scheme: dark) {
+	::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.3);
+	}
+}
+
 body {
 	color: var(--foreground);
 	background: var(--background);
