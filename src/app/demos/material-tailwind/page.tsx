@@ -1,14 +1,7 @@
 "use client";
 import CodeBlock from "@/app/components/CodeBlock";
-import { Button, Switch } from "@material-tailwind/react";
+import { Button, ButtonProps, Switch } from "@material-tailwind/react";
 import { useState, useMemo } from "react";
-
-type ButtonConfig = {
-	variant?: "filled" | "gradient" | "outlined" | "text";
-	color?: "blue" | "red" | "green" | "amber" | "purple";
-	size?: "sm" | "md" | "lg";
-	loading?: boolean;
-};
 
 // 配置选项
 const CONFIG_OPTIONS = {
@@ -16,16 +9,24 @@ const CONFIG_OPTIONS = {
 	color: ["blue", "red", "green", "amber", "purple"],
 	size: ["sm", "md", "lg"],
 	loading: [true, false],
+	ripple: [true, false],
 } as const;
 
 export default function MaterialTailwindDemo() {
-	const [buttonConfig, setButtonConfig] = useState<ButtonConfig>({});
+	const [buttonConfig, setButtonConfig] = useState<ButtonProps>({});
 
 	// 使用 useMemo 缓存生成的代码
 	const code = useMemo(() => {
 		const buttonProps = Object.entries(buttonConfig)
 			.filter(([_, value]) => value !== undefined)
-			.map(([key, value]) => `${key}="${value}"`);
+			.map(([key, value]) => {
+				console.log("key value", [key, value]);
+				if (typeof value === "string") {
+					return `${key}="${value}"`;
+				} else if (typeof value === "boolean") {
+					return `${key}={${value}}`;
+				}
+			});
 
 		return `import { Button } from "@material-tailwind/react";
 	  
@@ -44,7 +45,7 @@ export default function Example() {
 }`;
 	}, [buttonConfig]);
 
-	const updateConfig = (key: keyof ButtonConfig, value: any) => {
+	const updateConfig = (key: keyof ButtonProps, value: any) => {
 		setButtonConfig((prev) => ({
 			...prev,
 			[key]: prev[key] === value ? undefined : value,
@@ -76,12 +77,7 @@ export default function Example() {
 					<h2 className="text-xl font-semibold mb-4">Configs</h2>
 
 					<div className="space-y-4">
-						{(
-							Object.entries(CONFIG_OPTIONS) as [
-								keyof ButtonConfig,
-								string[]
-							][]
-						).map(([key, values]) => (
+						{Object.entries(CONFIG_OPTIONS).map(([key, values]) => (
 							<div key={key}>
 								<label className="block text-sm font-medium mb-2 capitalize">
 									{key}s
@@ -89,12 +85,17 @@ export default function Example() {
 								<div className="grid grid-cols-3 gap-2">
 									{values.map((value) => (
 										<button
-											key={value}
+											key={`${key}-${value}`}
 											onClick={() =>
-												updateConfig(key, value)
+												updateConfig(
+													key as keyof ButtonProps,
+													value
+												)
 											}
 											className={`p-2 rounded ${
-												buttonConfig[key] === value
+												buttonConfig[
+													key as keyof ButtonProps
+												] === value
 													? "bg-blue-500 text-white"
 													: "bg-card-background text-card-foreground hover:bg-opacity-80"
 											}`}
