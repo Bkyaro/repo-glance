@@ -1,6 +1,11 @@
 "use client";
 import CodeBlock from "@/app/components/CodeBlock";
-import { Button, ButtonProps, Switch } from "@material-tailwind/react";
+import {
+	Button,
+	ButtonProps,
+	ButtonStyleTypes,
+	Switch,
+} from "@material-tailwind/react";
 import { useState, useMemo } from "react";
 
 // 配置选项
@@ -13,7 +18,9 @@ const CONFIG_OPTIONS = {
 } as const;
 
 export default function MaterialTailwindDemo() {
-	const [buttonConfig, setButtonConfig] = useState<ButtonProps>({});
+	const [buttonConfig, setButtonConfig] = useState<Partial<ButtonStyleTypes>>(
+		{}
+	);
 
 	// 使用 useMemo 缓存生成的代码
 	const code = useMemo(() => {
@@ -45,7 +52,7 @@ export default function Example() {
 }`;
 	}, [buttonConfig]);
 
-	const updateConfig = (key: keyof ButtonProps, value: any) => {
+	const updateConfig = (key: keyof ButtonStyleTypes, value: any) => {
 		setButtonConfig((prev) => ({
 			...prev,
 			[key]: prev[key] === value ? undefined : value,
@@ -88,14 +95,16 @@ export default function Example() {
 											key={`${key}-${value}`}
 											onClick={() =>
 												updateConfig(
-													key as keyof ButtonProps,
+													key as keyof ButtonStyleTypes,
 													value
 												)
 											}
 											className={`p-2 rounded ${
-												buttonConfig[
-													key as keyof ButtonProps
-												] === value
+												String(
+													buttonConfig[
+														key as keyof ButtonStyleTypes
+													]
+												) === String(value)
 													? "bg-blue-500 text-white"
 													: "bg-card-background text-card-foreground hover:bg-opacity-80"
 											}`}
