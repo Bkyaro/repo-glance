@@ -1,11 +1,11 @@
-export function Logo() {
+export function MaterialTailwindLogo() {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			xmlnsXlink="http://www.w3.org/1999/xlink"
-			width="32"
-			height="32"
-			viewBox="0 0 32 32"
+			role="img"
+			className="w-10 h-10"
+			viewBox="0 0 24 24"
 			fill="none"
 		>
 			<rect width="32" height="32" rx="5" fill="black" />

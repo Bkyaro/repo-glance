@@ -1,3 +1,2 @@
-import { Logo as MaterialTailwindLogo } from "./material-tailwind";
-
-export { MaterialTailwindLogo };
+export { MaterialTailwindLogo } from "./material-tailwind";
+export { GSAPLogo } from "./gsap";

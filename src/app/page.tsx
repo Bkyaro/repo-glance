@@ -1,5 +1,5 @@
 import DemoCard from "./components/DemoCard";
-import { MaterialTailwindLogo } from "@/assets/logo";
+import { MaterialTailwindLogo, GSAPLogo } from "@/assets/logo";
 
 const demos = [
 	{
@@ -8,6 +8,13 @@ const demos = [
 			"The Tailwind CSS Components Library For Coding 10x Faster",
 		path: "/demos/material-tailwind",
 		icon: <MaterialTailwindLogo />,
+	},
+	{
+		title: "GSAP",
+		description:
+			"A wildly robust JavaScript animation library built for professionals",
+		path: "/demos/gsap",
+		icon: <GSAPLogo />,
 	},
 ];
 
