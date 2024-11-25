@@ -7,7 +7,7 @@ export const GSAPLogo = () => {
 			className="w-10 h-10"
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
-			fill={siGreensock.hex}
+			fill={`#${siGreensock.hex}`}
 		>
 			<path d={siGreensock.path} />
 		</svg>

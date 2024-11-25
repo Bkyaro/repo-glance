@@ -18,9 +18,10 @@
 	}
 }
 
-/* 让滚动条悬浮在内容上 */
-* {
-	scrollbar-gutter: stable both-edges;
+body {
+	color: var(--foreground);
+	background: var(--background);
+	font-family: var(--font-geist-sans), Arial, sans-serif;
 }
 
 /* 添加滚动条样式 */
@@ -65,10 +66,4 @@
 	::-webkit-scrollbar-thumb:hover {
 		background: rgba(255, 255, 255, 0.3);
 	}
-}
-
-body {
-	color: var(--foreground);
-	background: var(--background);
-	font-family: var(--font-geist-sans), Arial, sans-serif;
 }
