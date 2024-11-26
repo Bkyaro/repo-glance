@@ -1,61 +1,65 @@
 "use client";
 import CodeBlock from "@/app/components/CodeBlock";
-import {
-	Button,
-	ButtonProps,
-	ButtonStyleTypes,
-	Switch,
-} from "@material-tailwind/react";
+import { CardStylesType } from "@material-tailwind/react";
 import { useState, useMemo } from "react";
+import {
+	DefaultCard,
+	SimpleCard,
+	CardWithLink,
+	ProfileCard,
+} from "./components";
 
 // 配置选项
 const CONFIG_OPTIONS = {
-	variant: ["filled", "gradient", "outlined", "text"],
-	color: ["blue", "red", "green", "amber", "purple"],
-	size: ["sm", "md", "lg"],
-	loading: [true, false],
-	ripple: [true, false],
-} as const;
+	type: ["Card", "Simple Card", "Card With Link", "Profile Card"],
+};
+
 export default function MaterialTailwindDemo() {
-	const [buttonConfig, setButtonConfig] = useState<Partial<ButtonStyleTypes>>(
+	// 卡片默认分类
+	const defaultCards = [
+		{ type: "Card", node: <DefaultCard /> },
+		{ type: "Simple Card", node: <SimpleCard /> },
+		{ type: "Card With Link", node: <CardWithLink /> },
+		{ type: "Profile Card", node: <ProfileCard /> },
+	];
+
+	const [buttonConfig, setButtonConfig] = useState<Partial<CardStylesType>>(
 		{}
 	);
+	const [currentCard, setCurrentCard] = useState(defaultCards[0]);
+
+	const updateCard = (type: string) => {
+		const card = defaultCards.find((card) => card.type === type);
+		if (card) {
+			setCurrentCard(card);
+		}
+	};
 
 	// 使用 useMemo 缓存生成的代码
 	const code = useMemo(() => {
 		const buttonProps = Object.entries(buttonConfig)
 			.filter(([_, value]) => value !== undefined)
 			.map(([key, value]) => {
-				if (typeof value === "string") {
-					return `${key}="${value}"`;
-				} else if (typeof value === "boolean") {
-					return `${key}={${value}}`;
+				if (key !== "type") {
+					if (typeof value === "string") {
+						return `${key}="${value}"`;
+					} else if (typeof value === "boolean") {
+						return `${key}={${value}}`;
+					}
 				}
 			});
 
-		return `import { Button } from "@material-tailwind/react";
-	  
-export default function Example() {
-	return (
-		<Button${
-			buttonProps.length
-				? "\n            " +
-				  buttonProps.join("\n            ") +
-				  "\n        "
-				: ""
-		}>
-			DEMO BUTTON
-		</Button>
-	);
-}`;
+		return ``;
 	}, [buttonConfig]);
 
-	const updateConfig = (key: keyof ButtonStyleTypes, value: any) => {
+	const updateConfig = (key: keyof CardStylesType, value: any) => {
 		setButtonConfig((prev) => ({
 			...prev,
 			[key]: prev[key] === value ? undefined : value,
 		}));
 	};
+
+	console.log("buttonConfig", buttonConfig);
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -65,7 +69,7 @@ export default function Example() {
 				<div className="space-y-6">
 					{/* 预览区域 */}
 					<div className="p-6 border rounded-lg bg-card-background text-card-foreground flex items-center justify-center min-h-[200px]">
-						<Button {...buttonConfig}>DEMO BUTTON</Button>
+						{currentCard && currentCard.node}
 					</div>
 
 					{/* 代码预览 */}
@@ -79,29 +83,27 @@ export default function Example() {
 				{/* 控制面板 */}
 				<div className="p-6 border rounded-lg bg-card-background text-card-foreground">
 					<h2 className="text-xl font-semibold mb-4">Configs</h2>
-
-					<div>
+					<div className="space-y-4">
 						{Object.entries(CONFIG_OPTIONS).map(([key, values]) => (
 							<div key={key}>
 								<label className="block text-sm font-medium mb-2 capitalize">
 									{key}s
 								</label>
-								<div className="my-4 grid grid-cols-3 gap-2">
+								<div className="grid grid-cols-3 gap-2">
 									{values.map((value) => (
 										<button
 											key={`${key}-${value}`}
-											onClick={() =>
+											onClick={() => {
+												updateCard(value as string);
+
 												updateConfig(
-													key as keyof ButtonStyleTypes,
+													key as keyof CardStylesType,
 													value
-												)
-											}
+												);
+											}}
 											className={`p-2 rounded ${
-												String(
-													buttonConfig[
-														key as keyof ButtonStyleTypes
-													]
-												) === String(value)
+												String(buttonConfig[key]) ===
+												String(value)
 													? "bg-blue-500 text-white"
 													: "bg-card-background text-card-foreground hover:bg-opacity-80"
 											}`}

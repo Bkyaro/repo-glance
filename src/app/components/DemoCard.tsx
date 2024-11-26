@@ -16,7 +16,7 @@ export default function DemoCard({
 }: DemoCardProps) {
 	return (
 		<Link href={path}>
-			<div className="p-6 border rounded-lg hover:shadow-lg transition-shadow cursor-pointer">
+			<div className="p-6 h-full border rounded-lg hover:shadow-lg transition-shadow cursor-pointer">
 				<div className="text-4xl mb-4">
 					{typeof icon === "string" ? icon : icon}
 				</div>
